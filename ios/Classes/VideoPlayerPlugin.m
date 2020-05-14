@@ -253,8 +253,29 @@ toleranceAfter:kCMTimeZero];
   _player.volume = (volume < 0.0) ? 0.0 : ((volume > 1.0) ? 1.0 : volume);
 }
 
-    - (void)setSpeed:(double)speed {
-  _player.rate = speed;
+    - (void)setSpeed:(double)speed result:(FlutterResult)result {
+  if (speed == 1.0 || speed == 0.0) {
+    _player.rate = speed;
+    result(nil);
+  } else if (speed < 0 || speed > 2.0) {
+    result([FlutterError errorWithCode:@"unsupported_speed"
+                               message:@"Speed must be >= 0.0 and <= 2.0"
+                               details:nil]);
+  } else if ((speed > 1.0 && _player.currentItem.canPlayFastForward) ||
+             (speed < 1.0 && _player.currentItem.canPlaySlowForward)) {
+    _player.rate = speed;
+    result(nil);
+  } else {
+    if (speed > 1.0) {
+      result([FlutterError errorWithCode:@"unsupported_fast_forward"
+                                 message:@"This video cannot be played fast forward"
+                                 details:nil]);
+    } else {
+      result([FlutterError errorWithCode:@"unsupported_slow_forward"
+                                 message:@"This video cannot be played slow forward"
+                                 details:nil]);
+    }
+  }
 }
 
     - (CVPixelBufferRef)copyPixelBuffer {
@@ -385,9 +406,6 @@ result(nil);
 } else if ([@"setVolume" isEqualToString:call.method]) {
 [player setVolume:[[argsMap objectForKey:@"volume"] doubleValue]];
 result(nil);
-} else if ([@"setSpeed" isEqualToString:call.method]) {
-[player setSpeed:[[argsMap objectForKey:@"speed"] doubleValue]];
-result(nil);
 } else if ([@"play" isEqualToString:call.method]) {
 [player play];
 result(nil);
@@ -399,7 +417,10 @@ result(nil);
 } else if ([@"pause" isEqualToString:call.method]) {
 [player pause];
 result(nil);
-} else {
+} else if ([@"setSpeed" isEqualToString:call.method]) {
+[player setSpeed:[[argsMap objectForKey:@"speed"] doubleValue] result:result];
+return;
+}  else {
   result(FlutterMethodNotImplemented);
 }
 }
