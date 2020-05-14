@@ -199,8 +199,9 @@ abstract class _PlayerLifeCycleState extends State<PlayerLifeCycle> {
       }
     });
     controller.initialize();
-    controller.setLooping(true);
+    // controller.setLooping(true);
     controller.play();
+    controller.setSpeed(5.0);
   }
 
   @override

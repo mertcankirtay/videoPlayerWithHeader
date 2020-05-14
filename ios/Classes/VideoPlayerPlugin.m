@@ -253,6 +253,10 @@ toleranceAfter:kCMTimeZero];
   _player.volume = (volume < 0.0) ? 0.0 : ((volume > 1.0) ? 1.0 : volume);
 }
 
+    - (void)setSpeed:(double)speed {
+  _player.speed = speed;
+}
+
     - (CVPixelBufferRef)copyPixelBuffer {
   CMTime outputItemTime = [_videoOutput itemTimeForHostTime:CACurrentMediaTime()];
 if ([_videoOutput hasNewPixelBufferForItemTime:outputItemTime]) {
@@ -380,6 +384,9 @@ result(nil);
 result(nil);
 } else if ([@"setVolume" isEqualToString:call.method]) {
 [player setVolume:[[argsMap objectForKey:@"volume"] doubleValue]];
+result(nil);
+} else if ([@"setSpeed" isEqualToString:call.method]) {
+[player setSpeed:[[argsMap objectForKey:@"speed"] doubleValue]];
 result(nil);
 } else if ([@"play" isEqualToString:call.method]) {
 [player play];

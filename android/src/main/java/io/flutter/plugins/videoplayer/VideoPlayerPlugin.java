@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
+import com.google.android.exoplayer2.PlaybackParameters;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -221,6 +222,14 @@ public class VideoPlayerPlugin implements MethodCallHandler {
       exoPlayer.setRepeatMode(value ? REPEAT_MODE_ALL : REPEAT_MODE_OFF);
     }
 
+    void setSpeed(double value) {
+      if (value <= 0.0) return;
+      PlaybackParameters parameters = exoPlayer.getPlaybackParameters();
+      PlaybackParameters newParameters =
+          new PlaybackParameters((float) value, parameters.pitch, parameters.skipSilence);
+      exoPlayer.setPlaybackParameters(newParameters);
+    }
+
     void setVolume(double value) {
       float bracketedValue = (float) Math.max(0.0, Math.min(1.0, value));
       exoPlayer.setVolume(bracketedValue);
@@ -352,6 +361,10 @@ public class VideoPlayerPlugin implements MethodCallHandler {
     switch (call.method) {
       case "setLooping":
         player.setLooping((Boolean) call.argument("looping"));
+        result.success(null);
+        break;
+        case "setSpeed":
+        player.setSpeed((Double) call.argument("speed"));
         result.success(null);
         break;
       case "setVolume":
