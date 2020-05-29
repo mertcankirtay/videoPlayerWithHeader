@@ -385,6 +385,9 @@ result(nil);
 } else if ([@"setVolume" isEqualToString:call.method]) {
 [player setVolume:[[argsMap objectForKey:@"volume"] doubleValue]];
 result(nil);
+} else if ([@"setSpeed" isEqualToString:call.method]) {
+[player setSpeed:[[argsMap objectForKey:@"speed"] doubleValue]];
+result(nil);
 } else if ([@"play" isEqualToString:call.method]) {
 [player play];
 result(nil);
@@ -396,10 +399,7 @@ result(nil);
 } else if ([@"pause" isEqualToString:call.method]) {
 [player pause];
 result(nil);
-} else if ([@"setSpeed" isEqualToString:call.method]) {
-[player setSpeed:[[argsMap objectForKey:@"speed"] doubleValue] result:result];
-return;
-}  else {
+} else {
   result(FlutterMethodNotImplemented);
 }
 }
