@@ -254,7 +254,7 @@ toleranceAfter:kCMTimeZero];
 }
 
     - (void)setSpeed:(double)speed {
-  _player.speed = speed;
+  _player.rate = speed;
 }
 
     - (CVPixelBufferRef)copyPixelBuffer {
